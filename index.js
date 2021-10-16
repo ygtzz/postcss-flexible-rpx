@@ -4,6 +4,7 @@ var postcss = require('postcss')
 var path = require('path')
 var fs = require('fs')
 
+var rpxRegExp = /(\d+)rpx/
 var valueRegExp = /(dpr|rem|url)\((.+?)(px)?\)/
 var dprRegExp = /dpr\((\d+(?:\.\d+)?)px\)/
 
@@ -50,6 +51,13 @@ module.exports = postcss.plugin('postcss-flexible', function (options) {
         val = parseFloat(val.toFixed(remPrecision)) // control decimal precision of the calculated value
         return val == 0 ? val : val + type
       }
+
+      if(rpxRegExp.test(value)){
+        return value.replace(rpxRegExp, function($0, $1){
+          return getValue($1 / remUnit, 'rem')
+        })
+      }
+
       return value.replace(valueGlobalRegExp, function ($0, $1, $2) {
         if ($1 === 'url') {
           if (dpr) {
@@ -103,7 +111,10 @@ module.exports = postcss.plugin('postcss-flexible', function (options) {
       }
 
       rule.walkDecls(function (decl) {
-        if (valueRegExp.test(decl.value)) {
+        if(rpxRegExp.test(decl.value)){
+          decl.value = getCalcValue(decl.value);
+        }
+        else if (valueRegExp.test(decl.value)) {
           if (decl.value === '0px') {
             decl.value = '0'
           } else {
