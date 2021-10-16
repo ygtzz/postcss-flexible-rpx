@@ -6,11 +6,12 @@ This is a [postcss](https://www.npmjs.com/package/postcss) plugin for translatin
 
 `rpx` is to replace the `rem(...)` because the `rpx` is more concise
 
-## Usage
-
+## Install
 ```bash
 npm i postcss-flexible-rpx -D
 ```
+
+## Usage
 
 ### Webpack
 
