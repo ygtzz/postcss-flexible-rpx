@@ -1,6 +1,6 @@
 {
-  "name": "postcss-flexible",
-  "version": "0.5.4",
+  "name": "postcss-flexible-rpx",
+  "version": "0.0.1",
   "description": "flexible transformer for flexible",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/crossjs/postcss-flexible.git"
+    "url": "git+https://github.com/ygtzz/postcss-flexible.git"
   },
   "keywords": [
     "css",
@@ -18,12 +18,12 @@
     "url",
     "flexible"
   ],
-  "author": "crossjs",
+  "author": "ygtzz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/crossjs/postcss-flexible/issues"
+    "url": "https://github.com/ygtzz/postcss-flexible/issues"
   },
-  "homepage": "https://github.com/crossjs/postcss-flexible#readme",
+  "homepage": "https://github.com/ygtzz/postcss-flexible#readme",
   "dependencies": {
     "postcss": "^5.2.0"
   },
