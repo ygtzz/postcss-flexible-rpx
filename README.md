@@ -1,4 +1,6 @@
-# postcss-flexible
+# postcss-flexible-rpx
+
+Forked from [postcss-flexible](https://github.com/crossjs/postcss-flexible)
 
 This is a [postcss](https://www.npmjs.com/package/postcss) plugin for translating`rpx`, `rem(...)`, `dpr(...)`, `url(...)`. Similar to [px2rem](https://github.com/songsiqi/px2rem-postcss), but using custom function istead of comments for syntax.
 
@@ -6,7 +8,9 @@ This is a [postcss](https://www.npmjs.com/package/postcss) plugin for translatin
 
 ## Usage
 
-
+```bash
+npm i postcss-flexible-rpx -D
+```
 
 ### Webpack
 
