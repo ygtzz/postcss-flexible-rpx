@@ -4,7 +4,7 @@ var postcss = require('postcss')
 var path = require('path')
 var fs = require('fs')
 
-var rpxRegExp = /(\d+)rpx/
+var rpxRegExp = /(\d+)rx/
 var valueRegExp = /(dpr|rem|url)\((.+?)(px)?\)/
 var dprRegExp = /dpr\((\d+(?:\.\d+)?)px\)/
 

@@ -2,9 +2,10 @@
 
 Forked from [postcss-flexible](https://github.com/crossjs/postcss-flexible)
 
-This is a [postcss](https://www.npmjs.com/package/postcss) plugin for translating`rpx`, `rem(...)`, `dpr(...)`, `url(...)`. Similar to [px2rem](https://github.com/songsiqi/px2rem-postcss), but using custom function istead of comments for syntax.
+This is a [postcss](https://www.npmjs.com/package/postcss) plugin for translating`rx`, `rem(...)`, `dpr(...)`, `url(...)`. Similar to [px2rem](https://github.com/songsiqi/px2rem-postcss), but using custom function istead of comments for syntax.
 
-`rpx` is to replace the `rem(...)` because the `rpx` is more concise
+`rpx` is to replace the `rem(...)` because the `rpx` is more concise.
+Futhermore, `rx` is to replace `rpx` for concise.
 
 ## Install
 ```bash
@@ -27,7 +28,7 @@ module.exports = {
   },
   postcss: function() {
     // remUnit defaults to 75
-    return [require('postcss-flexible')({remUnit: 75})]
+    return [require('postcss-flexible-rpx')({remUnit: 75})]
   }
 }
 ```
@@ -39,7 +40,7 @@ Before processing:
 ```css
 .selector {
   font-size: dpr(32px);
-  width: 75rpx;
+  width: 75rx;
   height: rem(75px);
   line-height: 3;
   /* replace all @[1-3]x in urls: `/a/@2x/x.png`, `/a@2x/x.png` or `/a/x@2x.png` */
