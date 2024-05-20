@@ -30,7 +30,13 @@ module.exports = {
   },
   postcss: function() {
     // remUnit defaults to 75
-    return [require('postcss-flexible-rpx')({remUnit: 75})]
+    return [
+      require('postcss-flexible-rpx')({
+        pwUnit: 100,
+        phUnit: 100,
+        remUnit: 75
+      })
+    ]
   }
 }
 ```
@@ -41,6 +47,8 @@ Before processing:
 
 ```css
 .selector {
+  margin-top: 10ph;
+  padding-left: 20pw;
   font-size: dpr(32px);
   width: 75rx;
   height: rem(75px);
@@ -54,6 +62,8 @@ After processing:
 
 ```css
 .selector {
+  margin-top: 1vh;
+  padding-left: 2vw;
   width: 1rem;
   height: 1rem;
   line-height: 3;
