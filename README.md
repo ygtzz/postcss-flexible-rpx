@@ -7,6 +7,8 @@ This is a [postcss](https://www.npmjs.com/package/postcss) plugin for translatin
 `rpx` is to replace the `rem(...)` because the `rpx` is more concise.
 Futhermore, `rx` is to replace `rpx` for concise.
 
+Now, also support `pw` and `ph`, translating to `vw` and `vh`
+
 ## Install
 ```bash
 npm i postcss-flexible-rpx -D
@@ -77,6 +79,8 @@ After processing:
 
 - `desktop`: boolean, default `false`
 - `baseDpr`: number, default `2`
+- `pwUnit`: number, default `10`
+- `phUnit`: number, default `10`
 - `remUnit`: number, default `75`
 - `remPrecision`: number, default `6`
 - `addPrefixToSelector`: function

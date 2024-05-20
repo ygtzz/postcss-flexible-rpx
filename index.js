@@ -5,6 +5,8 @@ var path = require('path')
 var fs = require('fs')
 
 var rpxRegExp = /(\d+)rx/
+var pwRegExp = /(\d+)pw/
+var phRegExp = /(\d+)ph/
 var valueRegExp = /(dpr|rem|url)\((.+?)(px)?\)/
 var dprRegExp = /dpr\((\d+(?:\.\d+)?)px\)/
 
@@ -17,9 +19,11 @@ module.exports = postcss.plugin('postcss-flexible', function (options) {
     var desktop = !!options.desktop
     var baseDpr = options.baseDpr || 2
     var remUnit = options.remUnit || 75
+    var pwUnit = options.pwUnit || 10;
+    var phUnit = options.phUnit || 10;
     var remPrecision = options.remPrecision || 6
     var enableFontSetting = options.enableFontSetting || false
-    var fontGear = Object.prototype.toString.call(options.fontGear) === '[object Array]' ? options.fontGear : [-1, 0, 1, 2, 3, 4]
+    var fontGear = Array.isArray(options.fontGear) ? options.fontGear : [-1, 0, 1, 2, 3, 4]
     var addPrefixToSelector = options.addPrefixToSelector || function (selector, prefix) {
       if (/^html/.test(selector)) {
         return selector.replace(/^html/, 'html' + prefix)
@@ -43,18 +47,52 @@ module.exports = postcss.plugin('postcss-flexible', function (options) {
     fontGear = fontGear.sort().reverse()
     var urlRegExp = new RegExp('url\\([\'"]?\\S+?@(' + dprList.join('|') + ')x\\S+?[\'"]?\\)')
 
+    if (enableFontSetting) {
+      for (var j = 0; j < fontGear.length; j++) {
+        var gear = fontGear[j]
+        // clone the root element so that the operation blow won't distructe the origin root element
+        var clonedRoot = root.clone()
+        clonedRoot.walkRules(function (rule) {
+          desktop ? handleDesktop(rule) : handleMobile(rule, gear)
+        })
+        clonedRoot.walkAtRules(function(atRule) {
+          if (!atRule.nodes.length) {
+            atRule.remove()
+          }
+        })
+        // output the css file with different fontGear
+        outputCSSFile(gear, clonedRoot)
+      }
+    }
+
+    root.walkRules(function (rule) {
+      desktop ? handleDesktop(rule) : handleMobile(rule)
+    })
+
     // get calculated value of px or rem
     function getCalcValue (value, dpr, gear) {
       var valueGlobalRegExp = new RegExp(valueRegExp.source, 'g')
 
-      function getValue(val, type) {
-        val = parseFloat(val.toFixed(remPrecision)) // control decimal precision of the calculated value
+      function getValue(val, type, precision) {
+        if(precision){
+          val = parseFloat(val.toFixed(precision)) // control decimal precision of the calculated value
+        }
         return val == 0 ? val : val + type
       }
 
-      if(rpxRegExp.test(value)){
+      if(pwRegExp.test(value)){
+        return value.replace(pwRegExp, function($0, $1){
+          return getValue($1 / pwUnit, 'vw')
+        })
+      }
+      else if(phRegExp.test(value)){
+        return value.replace(phRegExp, function($0, $1){
+          return getValue($1 / phUnit, 'vh')
+        })
+      }
+      else if(rpxRegExp.test(value)){
         return value.replace(rpxRegExp, function($0, $1){
-          return getValue($1 / remUnit, 'rem')
+          return getValue($1 / remUnit, 'rem', remPrecision)
         })
       }
 
@@ -111,7 +149,13 @@ module.exports = postcss.plugin('postcss-flexible', function (options) {
       }
 
       rule.walkDecls(function (decl) {
-        if(rpxRegExp.test(decl.value)){
+        if(pwRegExp.test(decl.value)){
+          decl.value = getCalcValue(decl.value);
+        }
+        else if(phRegExp.test(decl.value)){
+          decl.value = getCalcValue(decl.value);
+        }
+        else if(rpxRegExp.test(decl.value)){
           decl.value = getCalcValue(decl.value);
         }
         else if (valueRegExp.test(decl.value)) {
@@ -153,25 +197,6 @@ module.exports = postcss.plugin('postcss-flexible', function (options) {
         rule.remove()
       }
     }
-    if (enableFontSetting) {
-      for (var j = 0; j < fontGear.length; j++) {
-        var gear = fontGear[j]
-        // clone the root element so that the operation blow won't distructe the origin root element
-        var clonedRoot = root.clone()
-        clonedRoot.walkRules(function (rule) {
-          desktop ? handleDesktop(rule) : handleMobile(rule, gear)
-        })
-        clonedRoot.walkAtRules(function(atRule) {
-          if (!atRule.nodes.length) {
-            atRule.remove()
-          }
-        })
-        // output the css file with different fontGear
-        outputCSSFile(gear, clonedRoot)
-      }
-    }
-    root.walkRules(function (rule) {
-      desktop ? handleDesktop(rule) : handleMobile(rule)
-    })
+
   }
 })
