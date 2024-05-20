@@ -1,7 +1,7 @@
 {
   "name": "postcss-flexible-rpx",
-  "version": "0.0.2",
-  "description": "flexible transformer for flexible",
+  "version": "1.0.0",
+  "description": "vw,vh,rem transformer",
   "main": "index.js",
   "scripts": {
     "test": "istanbul cover _mocha",
